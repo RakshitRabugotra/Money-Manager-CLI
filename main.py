@@ -1,8 +1,8 @@
 """
 To manage your daily expenses
 """
+import csv
 import datetime
-from typing import Union
 import src.db_handler as db_handler
 
 """
@@ -40,7 +40,18 @@ COMMANDS = {
     's': lambda: save_to_db(),
     'i': lambda: insert_record(),
     'h': lambda: view_commands(),
+    'q': lambda: quit_if_saved(),
 }
+
+def quit_if_saved():
+    """
+    Quit the program if everything is saved
+    """
+    if NEW_EXPENSES:
+        print("You have unsaved expense modifications, please save changes first...")
+        return
+
+    exit(0)
 
 
 def view_records():
@@ -77,7 +88,23 @@ def write_to_csv():
     """
     Writes all the data to a csv file
     """
+
+    # If the new-expenses aren't empty, then ask user to save first
+    if NEW_EXPENSES:
+        print("Expenses are modified, please save expenses first...")
+        return
     
+    # Else write all the Expenses to a csv file
+    with open("./csv/expenses.csv", mode='w') as writeFile:
+        writer = csv.writer(writeFile, delimiter=';')
+        # Write all the expenses
+        for expense in EXPENSES:
+            writer.writerow(expense)
+            print(f"Recorded expense '{expense}' successfully")
+        # end-for
+    # end-with
+
+    return
 
 
 def save_to_db():
@@ -94,13 +121,15 @@ def save_to_db():
     # Else, write the new expenses to the database
     for expense in NEW_EXPENSES:
         db_handler.insert_record(expense)
-        print("Recorded expense: ", expense, "successfully")
+        print("Recorded expense: ", expense)
     # end-for
 
     # Add the new expenses to existing expenses, and clear new-expenses
     EXPENSES += NEW_EXPENSES
     NEW_EXPENSES = []
 
+    # Everything went right
+    print("All expenses recorded successfully!")
     return
 
 
