@@ -1,6 +1,7 @@
 """
 To manage your daily expenses
 """
+import os
 import csv
 import datetime
 import src.db_handler as db_handler
@@ -95,7 +96,7 @@ def write_to_csv():
         return
     
     # Else write all the Expenses to a csv file
-    with open("./csv/expenses.csv", mode='w') as writeFile:
+    with open("./csv/expenses.csv", mode='w', newline='\n') as writeFile:
         writer = csv.writer(writeFile, delimiter=';')
         # Write all the expenses
         for expense in EXPENSES:
@@ -104,7 +105,21 @@ def write_to_csv():
         # end-for
     # end-with
 
-    return
+    # Ask user whether they wanna open the file?
+    should_open = ""
+    while True:
+        try:
+            should_open = input("Open the file (y/n)? :").lower()[0]
+            assert(should_open == 'y' or should_open == 'n')
+            break
+        except (IndexError, AssertionError):
+            print("Enter a valid character literal (y/n)")
+    # end-while
+
+    # If the user said yes, then open the file
+    if should_open == 'y':
+        os.startfile(os.path.join(os.getcwd(), "csv/expenses.csv"))
+    
 
 
 def save_to_db():
@@ -223,7 +238,6 @@ def main():
     The driver code for the program
     """
     while True:
-        print()
         get_command()
 
 
