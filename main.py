@@ -36,30 +36,17 @@ NEW_EXPENSES = [
 
 ]
 
-COMMANDS = {
-    'v': lambda: view_records(),
-    'c': lambda: write_to_csv(),
-    's': lambda: save_to_db(),
-    'i': lambda: insert_record(),
-    'h': lambda: view_commands(),
-    'q': lambda: quit_if_saved(),
-}
 
 def quit_if_saved():
-    """
-    Quit the program if everything is saved
-    """
+    """To quit the program if everything is saved."""
     if NEW_EXPENSES:
         print("You have unsaved expense modifications, please save changes first...")
         return
 
     exit(0)
 
-
 def view_records():
-    """
-    Load the expenses and show them to the screen
-    """
+    """To load the expenses and show them to the screen."""
     print("=-="*21)
     print("EXPENSES")
     print("=-="*21)
@@ -87,9 +74,7 @@ def view_records():
     return
 
 def write_to_csv():
-    """
-    Writes all the data to a csv file
-    """
+    """To write all the data to a csv file."""
 
     # If the new-expenses aren't empty, then ask user to save first
     if NEW_EXPENSES:
@@ -121,12 +106,8 @@ def write_to_csv():
     if should_open == 'y':
         os.startfile(os.path.join(os.getcwd(), "csv/expenses.csv"))
     
-
-
 def save_to_db():
-    """
-    Saves all the new expenses to the database,
-    """
+    """To save all the new expenses to the database."""
     global EXPENSES, NEW_EXPENSES
 
     # If the new expenses are empty, then there's nothing to write
@@ -148,11 +129,8 @@ def save_to_db():
     print("All expenses recorded successfully!")
     return
 
-
 def insert_record():
-    """
-    To register an expense
-    """
+    """To register an expense."""
     global NEW_EXPENSES
     is_data_valid = False
 
@@ -226,17 +204,20 @@ def insert_record():
     return
 
 def view_commands():
-    pass
+    """Shows all the valid commands and their corresponding functions."""
+    global COMMANDS
+    for key, command in COMMANDS.items():
+        print(f"{key} : {command.__doc__}")
+    # end-for
 
 def get_command():
-    """
-    Performs different commands based on different command
-    """
+    """Performs different commands based on different command."""
+    global COMMANDS
     data_is_good = False
     command = ""
     # Validate the data
     while not data_is_good:
-        command = input(":")
+        command = input(":").lower()
         try:
             command = command[0]
             # Check if the command maps to valid operation
@@ -252,10 +233,22 @@ def get_command():
     return COMMANDS[command]()
 
 
+# The valid commands to operate the application
+COMMANDS = {
+    'v': view_records,
+    'c': write_to_csv,
+    's': save_to_db,
+    'i': insert_record,
+    'h': view_commands,
+    'q': quit_if_saved,
+}
+
+
 def main():
     """
     The driver code for the program
     """
+    print("Enter 'h' for help")
     while True:
         get_command()
 
