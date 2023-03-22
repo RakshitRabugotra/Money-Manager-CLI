@@ -18,15 +18,41 @@ CREATE TABLE IF NOT EXISTS expenses (
 )
 """)
 
+def run_query(query: str) -> list:
+    """
+    Runs the SQL query in the database
+        Parameters:
+            query (str): The SQL query to run
+        
+        Returns:
+            the records matching the query
+    """
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
+def records_with_date(date: str) -> list:
+    """
+    Returns all the records matching the given date
+        Parameters:
+            date (str): The date to search for in '%b-%d-%Y' format
+        
+        Returns:
+            the records matching the date
+    """
+    return run_query(f"""
+    SELECT * FROM expenses WHERE expense_date LIKE '{date}'
+    """)
+    
 
 def load_previous_data() -> list:
     """
     Loads the previous data to a list
+        Returns: All the records in the database
     """
-    cursor.execute("""
+    return run_query("""
     SELECT * FROM expenses
     """)
-    return cursor.fetchall()
 
 
 def insert_record(expense):
