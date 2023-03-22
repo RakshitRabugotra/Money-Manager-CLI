@@ -12,7 +12,8 @@ EXPENSE_CATEGORIES = (
     "Movies, music and entertainment",
     "Hobby",
     "Cell phone or internet",
-    "Savings"
+    "Savings",
+    "Other"
 )
 
 GUIstyle = {

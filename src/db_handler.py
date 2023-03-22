@@ -2,6 +2,7 @@
 To store the content in a database
 """
 import sqlite3
+from src.constants import *
 
 # Open a connection to the database
 conn = sqlite3.connect("./database/expenses.db")
@@ -14,6 +15,7 @@ cursor.execute("""
 CREATE TABLE IF NOT EXISTS expenses (
     expense_date VARCHAR(15) NOT NULL,
     expense_name VARCHAR(255) NOT NULL,
+    category VARCHAR(255) NOT NULL,
     expenditure INTEGER NOT NULL
 )
 """)
@@ -59,18 +61,22 @@ def insert_record(expense):
     """
     Inserts the expense in the table
     """
-    expense_date, expense_name, expenditure = expense
+    expense_date, expense_name, category, expenditure = expense
     # Validate the data
     if not isinstance(expense_date, str):
         raise TypeError(f"Required 'str' type for 'expense_date', got '{expense_date.__class__} instead'")
     if not isinstance(expense_name, str):
         raise TypeError(f"Required 'str' type for 'expense_name', got '{expense_name.__class__} instead'")
+    if not isinstance(category, str):
+        raise TypeError(f"Required 'str' type for 'category', got '{category.__class__} instead'")
     if not isinstance(expenditure, (float, int)):
         raise TypeError(f"Required 'int/float' type for 'expenditure' got '{expenditure.__class__}' instead")
+    if category not in EXPENSE_CATEGORIES:
+        raise ValueError(f"The category '{category}' is not valid, allowed values are: {EXPENSE_CATEGORIES}")
 
     # Insert the value to the table
     cursor.execute(f"""
-    INSERT INTO expenses VALUES ("{expense_date}", "{expense_name}", {expenditure})
+    INSERT INTO expenses VALUES ("{expense_date}", "{expense_name}", "{category}", {expenditure})
     """)
 
     # If everything went successful, then commit the changes

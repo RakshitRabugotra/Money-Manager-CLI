@@ -5,6 +5,7 @@ import os
 import csv
 import datetime
 import src.db_handler as db_handler
+from src.constants import *
 
 """
 Different modes to show what's happening
@@ -63,8 +64,8 @@ def view_records():
     print("EXPENSES")
     print("=-="*21)
 
-    for date, expense_name, expenditure in EXPENSES:
-        print(f"{date} | \t{expense_name} -> ₹{expenditure}")
+    for date, expense_name, category, expenditure in EXPENSES:
+        print(f"{date} | \t{expense_name} | \t{category} -> ₹{expenditure}")
     # end-for
 
     if not EXPENSES:
@@ -75,8 +76,8 @@ def view_records():
     print("NEW-EXPENSES")
     print("=-="*21)
 
-    for date, expense_name, expenditure in NEW_EXPENSES:
-        print(f"{date} | \t{expense_name} -> ₹{expenditure}")
+    for date, expense_name, category, expenditure in NEW_EXPENSES:
+        print(f"{date} | \t{expense_name} | \t{category} -> ₹{expenditure}")
     # end-for
 
     if not NEW_EXPENSES:
@@ -169,6 +170,23 @@ def insert_record():
     # end-while
 
     is_data_valid = False
+    # Select the type of the expenditure
+    category = EXPENSE_CATEGORIES[0]
+    # Print the categories to the screen
+    [print(f"[{i}]", cat) for i, cat in enumerate(EXPENSE_CATEGORIES)]
+    # Validate the input
+    while not is_data_valid:
+        try:
+            index = int(input((f"Choose the category index (0-{len(EXPENSE_CATEGORIES)-1}): ")))
+            assert(0 <= index < len(EXPENSE_CATEGORIES))
+            category = EXPENSE_CATEGORIES[index]
+            is_data_valid = True
+        except AssertionError:
+            print("The index chosen is not valid, try again...")
+        # end-try
+    # end-while
+
+    is_data_valid = False
 
     # To record the expenditure (in number)
     expenditure = -1
@@ -187,6 +205,7 @@ def insert_record():
     # Ask the user if the information is correct
     print("\nWriting this expense:")
     print("Expense-name: ", expense_name)
+    print("Category: ", category)
     print("Expenditure: ", expenditure)
     # Confirm the data
     should_not_write = input("\nPress <RETURN> to confirm this expense, anything else to cancel: ")
@@ -195,7 +214,7 @@ def insert_record():
         insert_record()
     else:
         # Write the data to the list
-        NEW_EXPENSES += [ (datetime.date.today().strftime("%b-%d-%Y"), expense_name, expenditure) ]
+        NEW_EXPENSES += [ (datetime.date.today().strftime("%b-%d-%Y"), expense_name, category, expenditure) ]
         print("Saved expenditure successfully!")
 
     # Ask the user to whether continue or not
