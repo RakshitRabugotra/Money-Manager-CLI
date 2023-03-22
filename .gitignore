@@ -4,6 +4,10 @@ src/__pycache__/
 *.py[cod]
 *$py.class
 
+# Output files (.csv, .db)
+csv/*
+database/*
+
 # C extensions
 *.so
 
