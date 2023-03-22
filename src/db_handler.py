@@ -1,8 +1,13 @@
 """
 To store the content in a database
 """
+import os
 import sqlite3
 from src.constants import *
+
+# Create the directory if it doesn't exist
+if not os.path.isdir("./database"):
+    os.mkdir("./database")
 
 # Open a connection to the database
 conn = sqlite3.connect("./database/expenses.db")

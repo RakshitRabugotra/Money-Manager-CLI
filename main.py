@@ -81,6 +81,10 @@ def write_to_csv():
         print("Expenses are modified, please save expenses first...")
         return
     
+    # Create the directory if it doesn't exist
+    if not os.path.isdir("./csv"):
+        os.mkdir("./csv")
+    
     # Else write all the Expenses to a csv file
     with open("./csv/expenses.csv", mode='w', newline='\n') as writeFile:
         writer = csv.writer(writeFile, delimiter=';')
