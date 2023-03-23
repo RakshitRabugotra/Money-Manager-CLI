@@ -82,12 +82,26 @@ class App:
         recordPanel = tk.Frame(subWindow, width=400)
         recordPanel.pack(side='left')
 
-        recordListBox = tk.Listbox(recordPanel, selectmode='browse')
-        recordListBox.pack(side='left', fill='both')
+        # Add a treeview
+        recordTreeviewWidget = ttk.Treeview(recordPanel)
+        recordTreeviewWidget['columns'] = ("Name", "Category", "Expenditure")
+
+        # Configure the columns
+        recordTreeviewWidget.column("#0", width=120, minwidth=25)
+        recordTreeviewWidget.column("Name", anchor=tk.W, minwidth=100)
+        recordTreeviewWidget.column("Category", anchor=tk.CENTER, minwidth=80)
+        recordTreeviewWidget.column("Expenditure", anchor=tk.W, minwidth=100)
+
+        # Configure the headings
+        recordTreeviewWidget.heading("#0", text="0", anchor=tk.W)
+        recordTreeviewWidget.heading("Name", text="Expense Name", anchor=tk.CENTER)
+        recordTreeviewWidget.heading("Category", text="Expense Category", anchor=tk.CENTER)
+        recordTreeviewWidget.heading("Expenditure", text="Expenditure", anchor=tk.CENTER)
+        recordTreeviewWidget.pack(side='left', fill='both')
+
         # Add a slider for the records box
         recordScroll = ttk.Scrollbar(recordPanel)
         recordScroll.pack(side='left', fill='y')
-
 
         """ Select a date """
         tk.Label(infoPanel, text='Select a date', **GUIstyle['label-width-small']) \
@@ -118,8 +132,7 @@ class App:
         )
         # Change the format of the date to match the one in database
         database_formatted_date = datetime.datetime.strftime(date, "%b-%d-%Y")
-        print(database_formatted_date)
-
+    
         # Request the data for this date from the database
         date_records = db_handler.records_with_date(database_formatted_date)
 
