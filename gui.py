@@ -9,7 +9,7 @@ import datetime
 from main import *
 from src.constants import *
 
-class App:
+class App(ctk.CTk):
     """
     This is the class to implement money-manager in GUI
 
@@ -17,7 +17,7 @@ class App:
         master (tk.Tk): The master window for all the widgets
     """
 
-    def __init__(self, master:ctk.CTk):
+    def __init__(self):
         """
         The constructor for the class
 
@@ -25,25 +25,19 @@ class App:
             master (tk.Tk): The master window for all the widgets
 
         """
+        # Initialize the window
+        super().__init__()
+
         # Tkinter variables
 
         # Configure the master
-        master.title(APP_TITLE)
-        master.resizable(*RESIZABLE)
-
-        self.master = master
-        self.__layout()
+        self.title(APP_TITLE)
+        self.resizable(*RESIZABLE)
     
-
-    def __layout(self) -> None:
         """
         Contains the layout of the application
         """
-        master = self.master
-        master.resizable(False, False)
-        master.title("Money Manager")
-
-        topFrame = ctk.CTkFrame(master)
+        topFrame = ctk.CTkFrame(self)
         topFrame.pack(side='top', fill='both')
 
         infoPanel = ctk.CTkFrame(topFrame)
@@ -92,17 +86,10 @@ class App:
 
 
         # Bottom frame for more widgets
-        bottomFrame = ctk.CTkFrame(master)
+        bottomFrame = ctk.CTkFrame(self)
         bottomFrame.pack(side='top', fill='both')
 
         # To add 
-
-    
-    def run(self) -> None:
-        """
-        This function initializes the window
-        """
-        self.master.mainloop()
 
     
     """
@@ -139,5 +126,5 @@ class App:
 
 if __name__ == '__main__':
 
-    app = App(master=ctk.CTk())
-    app.run()
+    app = App()
+    app.mainloop()
