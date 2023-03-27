@@ -20,6 +20,10 @@ GUIstyle = {
     'button': {
         'width': 25
     },
+    'bordered-frame': {
+        # 'border_width': 3,
+        # 'border_color': "#260703"
+    },
     'label': {
         # 'font': "Helvetica",
         'width': 25

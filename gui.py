@@ -41,10 +41,10 @@ class App(ctk.CTk):
         topFrame.pack(side='top', fill='both')
 
         infoPanel = ctk.CTkFrame(topFrame)
-        infoPanel.pack(side='left', expand='no')
+        infoPanel.pack(side='left')
 
         recordPanel = ctk.CTkFrame(topFrame, width=400)
-        recordPanel.pack(side='left', expand='yes')
+        recordPanel.pack(side='left')
 
         # Add a treeview
         recordTreeviewWidget = ttk.Treeview(recordPanel)
@@ -67,9 +67,12 @@ class App(ctk.CTk):
         recordScroll = ctk.CTkScrollbar(recordPanel)
         recordScroll.pack(side='left', fill='y')
 
+        # For managing the row and column 
+        __row = 0; __column = 0
+
         """ Select a date """
         ctk.CTkLabel(infoPanel, text='Select a date', **GUIstyle['label-width-small']) \
-        .grid(row=0, column=0, padx=10, pady=10)
+        .grid(row=__row, column=__column, padx=10, pady=10); __row += 1
 
         # Fetch today's date
         today = datetime.datetime.today()
@@ -82,19 +85,63 @@ class App(ctk.CTk):
         
         # Button to initiate the process
         ctk.CTkButton(infoPanel, text='Get information', **GUIstyle['button'], command=self.functionViewDateRecord) \
-        .grid(row=2, column=0, padx=10, pady=10)
+        .grid(row=__row, column=0, padx=10, pady=10); __row += 1
 
+        # Button to view all the records
+        ctk.CTkButton(infoPanel, text='View all records', **GUIstyle['button'], command=self.functionViewAllRecords) \
+        .grid(row=__row, column=0, padx=10, pady=10); __row += 1
 
-        # Bottom frame for more widgets
-        bottomFrame = ctk.CTkFrame(self)
-        bottomFrame.pack(side='top', fill='both')
-
-        # To add 
 
     
     """
     Our utility functions
     """
+    def functionViewAllRecords(self) -> None:
+        """
+        The function to view all the records
+        """
+
+        # Fetch all the previous records and sort them by date
+        expense_record = db_handler.date_grouped_records()
+
+        topLevel = ctk.CTkToplevel(self)
+        topLevel.title("Expense History")
+
+        # Add scrollable frame
+        frame = ctk.CTkScrollableFrame(topLevel, label_text="Expense History")
+        frame.pack(side='top', expand='yes', fill='both')
+        # Add new frames containing the information on expense
+
+        for record_date in expense_record:
+
+            # Add specific frame for the expenses
+            recordFrame = ctk.CTkFrame(frame, **GUIstyle['bordered-frame'])
+            recordFrame.pack(side='top', padx=10, pady=20, fill='both')
+
+            # Fetch the record detail for that day
+            date_record = expense_record[record_date]
+            record_field_num = len(date_record[0])
+
+            # Add a title to the frame
+            ctk.CTkLabel(recordFrame, text=record_date, font=ctk.CTkFont(size=20, weight="bold")) \
+            .grid(row=0, columnspan=record_field_num, padx=2, pady=5)
+
+            # Add records using grid manager
+            for i, record in enumerate(date_record):
+                # This all information will be in same row
+                for j, record_field in enumerate(record):
+                    # Skip adding the date again
+                    if j == 0: continue
+                    # Add everything else on the screen  
+                    ctk.CTkLabel(recordFrame, text=str(record_field), font=ctk.CTkFont(family="Gotham", size=12)) \
+                    .grid(row=i+1, column=j, padx=5, pady=3)
+
+            
+
+
+            
+
+
     def functionAddRecord(self) -> None:
         pass
 
