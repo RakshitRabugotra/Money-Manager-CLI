@@ -18,14 +18,11 @@ EXPENSE_CATEGORIES = (
 
 GUIstyle = {
     'button': {
-        'relief': 'groove',
-        'width': 30
+        'width': 25
     },
     'label': {
-        'relief': 'groove',
-        'borderwidth': 2,
-        'font': 'Verdana 12',
-        'width': 30
+        # 'font': "Helvetica",
+        'width': 25
     }
 }
 GUIstyle['label-width-small'] = GUIstyle['label']
