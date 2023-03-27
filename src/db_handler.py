@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS expenses (
 )
 """)
 
-def run_query(query: str) -> list:
+def run_query(query: str) -> list[list]:
     """
     Runs the SQL query in the database
         Parameters:
@@ -38,7 +38,7 @@ def run_query(query: str) -> list:
     return cursor.fetchall()
 
 
-def records_with_date(date: str) -> list:
+def records_with_date(date: str) -> list[list]:
     """
     Returns all the records matching the given date
         Parameters:
@@ -52,7 +52,7 @@ def records_with_date(date: str) -> list:
     """)
     
 
-def load_previous_data() -> list:
+def load_previous_data() -> list[list]:
     """
     Loads the previous data to a list
         Returns: All the records in the database
@@ -60,6 +60,27 @@ def load_previous_data() -> list:
     return run_query("""
     SELECT * FROM expenses
     """)
+
+
+def get_date_records() -> dict[str, list]:
+    """
+    Loads the previous data to a dictionary where key is the date of expense
+    and value is the list of expenses that day
+    """
+    records = load_previous_data()
+
+    # Create a new dictionary with required structure
+    grouped_records = {}
+
+    for record in records:
+        # The date is at index 0
+        date = record[0]
+        if grouped_records.get(date) is None:
+            grouped_records[date] = [ record ]
+        else:
+            grouped_records[date] += [ record ]
+    
+    return grouped_records
 
 
 def insert_record(expense):
