@@ -62,7 +62,7 @@ def load_previous_data() -> list[list]:
     """)
 
 
-def get_date_records() -> dict[str, list]:
+def date_grouped_records() -> dict[str, list]:
     """
     Loads the previous data to a dictionary where key is the date of expense
     and value is the list of expenses that day
