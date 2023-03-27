@@ -1,6 +1,7 @@
 """
 This is the GUI version of budget maker
 """
+import customtkinter as ctk
 import tkinter as tk
 from tkinter import ttk
 from tkcalendar import Calendar
@@ -16,7 +17,7 @@ class App:
         master (tk.Tk): The master window for all the widgets
     """
 
-    def __init__(self, master:tk.Tk):
+    def __init__(self, master:ctk.CTk):
         """
         The constructor for the class
 
@@ -39,19 +40,62 @@ class App:
         Contains the layout of the application
         """
         master = self.master
+        master.resizable(False, False)
+        master.title("Money Manager")
 
-        leftFrame = tk.Frame(master, width=200)
-        leftFrame.pack(side='left')
+        topFrame = ctk.CTkFrame(master)
+        topFrame.pack(side='top', fill='both')
 
-        rightFrame = tk.Frame(master, width=300)
-        rightFrame.pack(side='left')
+        infoPanel = ctk.CTkFrame(topFrame)
+        infoPanel.pack(side='left', expand='no')
 
-        # Buttons to view and add records
-        tk.Button(leftFrame, text='Add Record', command=self.functionAddRecord, **GUIstyle['button'])  \
-        .pack(side='top', padx=20, pady=20)
+        recordPanel = ctk.CTkFrame(topFrame, width=400)
+        recordPanel.pack(side='left', expand='yes')
 
-        tk.Button(leftFrame, text='View Records', command=self.functionViewRecords, **GUIstyle['button']) \
-        .pack(side='top', padx=20, pady=20)
+        # Add a treeview
+        recordTreeviewWidget = ttk.Treeview(recordPanel)
+        recordTreeviewWidget['columns'] = ("Name", "Category", "Expenditure")
+
+        # Configure the columns
+        recordTreeviewWidget.column("#0", width=120, minwidth=25)
+        recordTreeviewWidget.column("Name", anchor=tk.W, minwidth=75)
+        recordTreeviewWidget.column("Category", anchor=tk.CENTER, minwidth=75)
+        recordTreeviewWidget.column("Expenditure", anchor=tk.W, minwidth=75)
+
+        # Configure the headings
+        recordTreeviewWidget.heading("#0", text="0", anchor=tk.W)
+        recordTreeviewWidget.heading("Name", text="Expense Name", anchor=tk.CENTER)
+        recordTreeviewWidget.heading("Category", text="Expense Category", anchor=tk.CENTER)
+        recordTreeviewWidget.heading("Expenditure", text="Expenditure", anchor=tk.CENTER)
+        recordTreeviewWidget.pack(side='left', fill='both', expand='yes')
+
+        # Add a slider for the records box
+        recordScroll = ctk.CTkScrollbar(recordPanel)
+        recordScroll.pack(side='left', fill='y')
+
+        """ Select a date """
+        ctk.CTkLabel(infoPanel, text='Select a date', **GUIstyle['label-width-small']) \
+        .grid(row=0, column=0, padx=10, pady=10)
+
+        # Fetch today's date
+        today = datetime.datetime.today()
+        # The calendar widget
+        # self.calendarWidget = Calendar(infoPanel, selectmode='day', 
+        #                           year=today.year, 
+        #                           month=today.month, 
+        #                           day=today.day)
+        # self.calendarWidget.grid(row=1, column=0, padx=10, pady=10)
+        
+        # Button to initiate the process
+        ctk.CTkButton(infoPanel, text='Get information', **GUIstyle['button'], command=self.functionViewDateRecord) \
+        .grid(row=2, column=0, padx=10, pady=10)
+
+
+        # Bottom frame for more widgets
+        bottomFrame = ctk.CTkFrame(master)
+        bottomFrame.pack(side='top', fill='both')
+
+        # To add 
 
     
     def run(self) -> None:
@@ -72,54 +116,7 @@ class App:
         """
         The function to view previous records
         """
-        subWindow = tk.Toplevel(self.master)
-        subWindow.resizable(False, False)
-        subWindow.title("View Records")
-
-        infoPanel = tk.Frame(subWindow)
-        infoPanel.pack(side='left', expand='no')
-
-        recordPanel = tk.Frame(subWindow, width=400)
-        recordPanel.pack(side='left')
-
-        # Add a treeview
-        recordTreeviewWidget = ttk.Treeview(recordPanel)
-        recordTreeviewWidget['columns'] = ("Name", "Category", "Expenditure")
-
-        # Configure the columns
-        recordTreeviewWidget.column("#0", width=120, minwidth=25)
-        recordTreeviewWidget.column("Name", anchor=tk.W, minwidth=100)
-        recordTreeviewWidget.column("Category", anchor=tk.CENTER, minwidth=80)
-        recordTreeviewWidget.column("Expenditure", anchor=tk.W, minwidth=100)
-
-        # Configure the headings
-        recordTreeviewWidget.heading("#0", text="0", anchor=tk.W)
-        recordTreeviewWidget.heading("Name", text="Expense Name", anchor=tk.CENTER)
-        recordTreeviewWidget.heading("Category", text="Expense Category", anchor=tk.CENTER)
-        recordTreeviewWidget.heading("Expenditure", text="Expenditure", anchor=tk.CENTER)
-        recordTreeviewWidget.pack(side='left', fill='both')
-
-        # Add a slider for the records box
-        recordScroll = ttk.Scrollbar(recordPanel)
-        recordScroll.pack(side='left', fill='y')
-
-        """ Select a date """
-        tk.Label(infoPanel, text='Select a date', **GUIstyle['label-width-small']) \
-        .grid(row=0, column=0, padx=10, pady=10)
-
-        # Fetch today's date
-        today = datetime.datetime.today()
-        # The calendar widget
-        self.calendarWidget = Calendar(infoPanel, selectmode='day', 
-                                  year=today.year, 
-                                  month=today.month, 
-                                  day=today.day)
-        self.calendarWidget.grid(row=1, column=0, padx=10, pady=10)
         
-        # Button to initiate the process
-        tk.Button(infoPanel, text='Get information', **GUIstyle['button'], command=self.functionViewDateRecord) \
-        .grid(row=2, column=0, padx=10, pady=10)
-
 
     def functionViewDateRecord(self) -> None:
         """
@@ -142,5 +139,5 @@ class App:
 
 if __name__ == '__main__':
 
-    app = App(master=tk.Tk())
+    app = App(master=ctk.CTk())
     app.run()
