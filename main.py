@@ -43,7 +43,7 @@ def quit_if_saved():
         print("You have unsaved expense modifications, please save changes first...")
         return
 
-    exit(0)
+    exit()
 
 def view_records():
     """To load the expenses and show them to the screen."""
