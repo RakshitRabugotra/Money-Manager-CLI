@@ -2,6 +2,7 @@
 To store the content in a database
 """
 import os
+import csv
 import sqlite3
 from src.constants import *
 
@@ -24,6 +25,44 @@ CREATE TABLE IF NOT EXISTS expenses (
     expenditure INTEGER NOT NULL
 )
 """)
+
+
+def insert_from_csv(csvFile: str) -> None:
+    """
+    Loads the data from the CSV file
+    and inserts all that data 
+        Parameters:
+            csvFile (str): The filepath of the CSV file
+        
+        Returns:
+            None
+    """
+    # Open the file
+    data = []
+    try:
+        with open(file=csvFile, mode='r') as rFile:
+            reader = csv.reader(rFile, delimiter=';')
+            # Copy the data line-by-line
+            data = [line for line in reader]
+        # end-with
+    except FileNotFoundError:
+        print(f"[CAUTION] File '{csvFile}' not found...")
+    # end-try
+
+    # Write all the fields in the data
+    try:
+        for expense_date, expense_name, category, expenditure in data:
+            # Group the expense
+            expense = (expense_date, expense_name, category, expenditure)    
+            # Insert the records
+            insert_record(expense)
+        # end-for
+    except TypeError:
+        print(f"[ERROR] Too many values to unpack\ndata:\n{data}")
+    # end-try
+
+    return
+
 
 def run_query(query: str) -> list[list]:
     """
@@ -96,7 +135,12 @@ def insert_record(expense):
     if not isinstance(category, str):
         raise TypeError(f"Required 'str' type for 'category', got '{category.__class__} instead'")
     if not isinstance(expenditure, (float, int)):
-        raise TypeError(f"Required 'int/float' type for 'expenditure' got '{expenditure.__class__}' instead")
+        # Try to cast the data to float
+        try:
+            expenditure = float(expenditure)
+        except ValueError:
+            raise TypeError(f"Required 'int/float' type for 'expenditure' got '{expenditure.__class__}' instead")
+        # end-try
     if category not in EXPENSE_CATEGORIES:
         raise ValueError(f"The category '{category}' is not valid, allowed values are: {EXPENSE_CATEGORIES}")
 
