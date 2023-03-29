@@ -13,6 +13,7 @@ EXPENSE_CATEGORIES = (
     "Hobby",
     "Cell phone or internet",
     "Savings",
+    "Flat expense",
     "Other"
 )
 
