@@ -232,6 +232,26 @@ def insert_record():
     
     return
 
+
+def set_budget():
+    """Set a budget for the month starting from specific date"""
+    start_date = input("Enter the start date (like 'Mar-25-2023'): ")
+    end_date = input("Enter the end date (like 'Mar-25-2023'): ")
+
+    budget = -1
+    while budget <= 0:
+        try:
+            budget = int(input("Enter your budget for the time-period: "))
+            assert(budget > 0)
+        except (ValueError, AssertionError):
+            print("Enter a valid number greater than 0, (positive integer)")
+            budget = -1
+        # end-try
+    # end-while
+
+    # Store the budget calculated somewhere
+        
+
 def help_view_commands():
     """Shows all the valid commands and their corresponding functions."""
     global COMMANDS
@@ -272,6 +292,7 @@ COMMANDS = {
     'c': write_to_csv,
     's': save_to_db,
     'i': insert_record,
+    'b': set_budget,
     'h': help_view_commands,
     'q': quit_if_saved,
 }
