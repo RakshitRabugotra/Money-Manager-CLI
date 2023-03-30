@@ -40,10 +40,35 @@ NEW_EXPENSES = [
 def quit_if_saved():
     """To quit the program if everything is saved."""
     if NEW_EXPENSES:
-        print("You have unsaved expense modifications, please save changes first...")
+        print(MESSAGES['expense-unsaved'])
         return
 
     exit()
+
+
+def show_total():
+    """To show the Total and Cumulative total for each day"""
+    # First tell the person to save the record
+    if NEW_EXPENSES:
+        print(MESSAGES['expense-unsaved'])
+        return
+
+    cumulative_total = 0
+
+    # Get the date sorted data from the database
+    grouped_records = db_handler.date_grouped_records()
+
+    # Run the loop and show the total
+    for record_date, records in grouped_records.items():
+        # Calculate the date total
+        date_total = sum([record[-1] for record in records])
+        # Add to cumulative total
+        cumulative_total += date_total
+        # Show the total
+        print(f"\n{record_date}\nTotal: {date_total}\nCumulative Total: {cumulative_total}")
+    # end-for
+    return
+
 
 def view_records():
     """To load the expenses and show them to the screen."""
@@ -57,7 +82,7 @@ def view_records():
 
     if not EXPENSES:
         # If expenses are empty then let the user know
-        print("No prior records found...")
+        print(MESSAGES['expense-notfound'])
 
     print("=-="*21)
     print("NEW-EXPENSES")
@@ -69,7 +94,7 @@ def view_records():
 
     if not NEW_EXPENSES:
         # If expenses are empty then let the user know
-        print("No prior records found...")
+        print(MESSAGES['expense-notfound'])
 
     return
 
@@ -78,7 +103,7 @@ def write_to_csv():
 
     # If the new-expenses aren't empty, then ask user to save first
     if NEW_EXPENSES:
-        print("Expenses are modified, please save expenses first...")
+        print(MESSAGES['expense-unsaved'])
         return
     
     # Create the directory if it doesn't exist
@@ -116,7 +141,7 @@ def save_to_db():
 
     # If the new expenses are empty, then there's nothing to write
     if not NEW_EXPENSES:
-        print("Nothing to modify, no new expenses...")
+        print(MESSAGES['no-new-expenses'])
         return
     
     # Else, write the new expenses to the database
@@ -130,7 +155,7 @@ def save_to_db():
     NEW_EXPENSES = []
 
     # Everything went right
-    print("All expenses recorded successfully!")
+    print(MESSAGES['all-expenses-recorded'])
     return
 
 def insert_record():
@@ -207,12 +232,15 @@ def insert_record():
     
     return
 
-def view_commands():
+def help_view_commands():
     """Shows all the valid commands and their corresponding functions."""
     global COMMANDS
     for key, command in COMMANDS.items():
         print(f"{key} : {command.__doc__}")
     # end-for
+
+    # Add a newline for aesthetics
+    print()
 
 def get_command():
     """Performs different commands based on different command."""
@@ -240,10 +268,11 @@ def get_command():
 # The valid commands to operate the application
 COMMANDS = {
     'v': view_records,
+    't': show_total,
     'c': write_to_csv,
     's': save_to_db,
     'i': insert_record,
-    'h': view_commands,
+    'h': help_view_commands,
     'q': quit_if_saved,
 }
 
