@@ -32,3 +32,11 @@ GUIstyle = {
 }
 GUIstyle['label-width-small'] = GUIstyle['label']
 GUIstyle['label-width-small']['width'] = 20
+
+
+MESSAGES = {
+    'expense-unsaved': "You have unsaved expense modifications, please save changes first...",
+    'expense-notfound': "No prior records found...",
+    'no-new-expenses': "Nothing to modify, no new expenses...",
+    'all-expenses-recorded': "All expenses recorded successfully!",
+}
