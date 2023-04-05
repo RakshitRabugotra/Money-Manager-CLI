@@ -196,7 +196,12 @@ def insert_record():
     is_data_valid = False
 
     # To record the expenditure (in number)
-    expenditure = -1
+    expenditure = 0
+
+    # Check if the expense is NO-EXPENSE
+    if category == EXPENSE_CATEGORIES[-2]:
+        # Then skip the expense recording part
+        is_data_valid = True
 
     while not is_data_valid:
         try:

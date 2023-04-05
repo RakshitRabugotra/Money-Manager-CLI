@@ -14,6 +14,7 @@ EXPENSE_CATEGORIES = (
     "Cell phone or internet",
     "Savings",
     "Flat expense",
+    "NO-EXPENSE",
     "Other"
 )
 
