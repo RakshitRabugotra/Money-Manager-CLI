@@ -257,6 +257,22 @@ def set_budget():
     # Store the budget calculated somewhere
         
 
+def run_query():
+    """To run a SQLlite query on the database"""
+    # Get the query input as string
+    command = input("Enter the query: ")
+
+    # If the command is empty then exit
+    if not command:
+        return
+
+    # Show the result from the query
+    print("=-="*20)
+    for item in db_handler.run_query(f'{command}'):
+        print(item)
+    print("=-="*20)
+
+
 def help_view_commands():
     """Shows all the valid commands and their corresponding functions."""
     global COMMANDS
@@ -298,6 +314,7 @@ COMMANDS = {
     's': save_to_db,
     'i': insert_record,
     'b': set_budget,
+    'r': run_query,
     'h': help_view_commands,
     'q': quit_if_saved,
 }
